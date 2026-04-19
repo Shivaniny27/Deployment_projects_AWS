@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Algerian Forest Fire - FWI Predictor</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 36px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1 { font-size: 1.5rem; color: #2d3748; margin-bottom: 6px; }
+        p.subtitle { color: #718096; font-size: 0.9rem; margin-bottom: 24px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .field { display: flex; flex-direction: column; }
+        label { font-size: 0.82rem; font-weight: 600; color: #4a5568; margin-bottom: 4px; }
+        input {
+            padding: 8px 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        input:focus { outline: none; border-color: #667eea; }
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover { background: #5a67d8; }
+        .result {
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 8px;
+            background: #ebf8ff;
+            border: 1px solid #90cdf4;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #2b6cb0;
+            font-weight: 600;
+        }
+        .error {
+            background: #fff5f5;
+            border-color: #fc8181;
+            color: #c53030;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Forest Fire FWI Predictor</h1>
+    <p class="subtitle">Algerian Forest Fires Dataset — Ridge Regression Model</p>
+
+    <form action="/predict" method="POST">
+        <div class="grid">
+            <div class="field">
+                <label for="Temperature">Temperature (°C)</label>
+                <input type="number" step="any" name="Temperature" id="Temperature"
+                       placeholder="e.g. 29" required
+                       value="{{ form_data.Temperature if form_data }}">
+            </div>
+            <div class="field">
+                <label for="RH">Relative Humidity (%)</label>
+                <input type="number" step="any" name="RH" id="RH"
+                       placeholder="e.g. 57" required
+                       value="{{ form_data.RH if form_data }}">
+            </div>
+            <div class="field">
+                <label for="Ws">Wind Speed (km/h)</label>
+                <input type="number" step="any" name="Ws" id="Ws"
+                       placeholder="e.g. 18" required
+                       value="{{ form_data.Ws if form_data }}">
+            </div>
+            <div class="field">
+                <label for="Rain">Rain (mm)</label>
+                <input type="number" step="any" name="Rain" id="Rain"
+                       placeholder="e.g. 0" required
+                       value="{{ form_data.Rain if form_data }}">
+            </div>
+            <div class="field">
+                <label for="FFMC">FFMC Index</label>
+                <input type="number" step="any" name="FFMC" id="FFMC"
+                       placeholder="e.g. 74.0" required
+                       value="{{ form_data.FFMC if form_data }}">
+            </div>
+            <div class="field">
+                <label for="DMC">DMC Index</label>
+                <input type="number" step="any" name="DMC" id="DMC"
+                       placeholder="e.g. 26.9" required
+                       value="{{ form_data.DMC if form_data }}">
+            </div>
+            <div class="field">
+                <label for="DC">DC Index</label>
+                <input type="number" step="any" name="DC" id="DC"
+                       placeholder="e.g. 94.3" required
+                       value="{{ form_data.DC if form_data }}">
+            </div>
+            <div class="field">
+                <label for="ISI">ISI Index</label>
+                <input type="number" step="any" name="ISI" id="ISI"
+                       placeholder="e.g. 5.1" required
+                       value="{{ form_data.ISI if form_data }}">
+            </div>
+            <div class="field" style="grid-column: span 2;">
+                <label for="BUI">BUI Index</label>
+                <input type="number" step="any" name="BUI" id="BUI"
+                       placeholder="e.g. 33.6" required
+                       value="{{ form_data.BUI if form_data }}">
+            </div>
+        </div>
+        <button type="submit">Predict FWI</button>
+    </form>
+
+    {% if prediction is not none %}
+        <div class="result {% if error %}error{% endif %}">
+            {% if error %}
+                {{ error }}
+            {% else %}
+                Predicted FWI: {{ prediction }}
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>
